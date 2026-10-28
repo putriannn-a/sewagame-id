@@ -1,25 +1,21 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CatalogController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Rute Publik & Toko
+| Rute Publik (Katalog & Detail Game)
 |--------------------------------------------------------------------------
 */
-Route::get('/', function () {
-    return redirect()->route('catalog.index');
-});
-
-// Placeholder Katalog Toko (akan kita buat penuh di Tahap 4)
-Route::get('/toko', function () {
-    return view('catalog.placeholder');
-})->name('catalog.index');
+Route::get('/', [CatalogController::class, 'index'])->name('catalog.index');
+Route::get('/toko', [CatalogController::class, 'index'])->name('catalog.index');
+Route::get('/game/{id}', [CatalogController::class, 'show'])->name('catalog.show');
 
 /*
 |--------------------------------------------------------------------------
-| Rute Tamu (Auth)
+| Rute Tamu (Autentikasi)
 |--------------------------------------------------------------------------
 */
 Route::middleware('guest')->group(function () {
@@ -34,10 +30,15 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 
 /*
 |--------------------------------------------------------------------------
-| Rute Customer (Auth & Role: Customer)
+| Rute Khusus Customer (Auth & Role: Customer)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:customer'])->group(function () {
+    // Placeholder untuk checkout dan sewa saya (akan dihubungkan di Tahap 5)
+    Route::get('/sewa-game/{id}', function ($id) {
+        return redirect()->route('catalog.show', $id);
+    })->name('rentals.checkout');
+
     Route::get('/sewa-saya', function () {
         return view('rentals.placeholder');
     })->name('rentals.my');
@@ -45,7 +46,7 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Rute Admin (Auth & Role: Admin)
+| Rute Khusus Admin (Auth & Role: Admin)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
