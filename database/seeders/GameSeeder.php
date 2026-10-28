@@ -17,10 +17,10 @@ class GameSeeder extends Seeder
         $retro  = Platform::where('name', 'Retro Console')->first();
 
         $games = [
-            // PlayStation 5
             [
                 'platform_id'      => $ps5->id,
                 'title'            => 'Marvel\'s Spider-Man 2',
+                'cover_image'      => "Marvel's Spider-Man 2.jpg",
                 'condition'        => 'bnib',
                 'stock'            => 4,
                 'rent_daily_price' => 35000,
@@ -30,26 +30,27 @@ class GameSeeder extends Seeder
             [
                 'platform_id'      => $ps5->id,
                 'title'            => 'God of War Ragnarök',
+                'cover_image'      => 'God of War Ragnarök.jpg',
                 'condition'        => 'like_new',
                 'stock'            => 3,
                 'rent_daily_price' => 30000,
                 'deposit_amount'   => 250000,
                 'is_active'        => true,
             ],
-            // PlayStation 4
             [
                 'platform_id'      => $ps4->id,
                 'title'            => 'Elden Ring',
+                'cover_image'      => 'Elden Ring.jpg',
                 'condition'        => 'good',
                 'stock'            => 5,
                 'rent_daily_price' => 25000,
                 'deposit_amount'   => 200000,
                 'is_active'        => true,
             ],
-            // Nintendo Switch
             [
                 'platform_id'      => $switch->id,
                 'title'            => 'The Legend of Zelda: Tears of the Kingdom',
+                'cover_image'      => 'Zelda-Tears-Of-Kingdom-Hero-1038x576.jpg',
                 'condition'        => 'like_new',
                 'stock'            => 4,
                 'rent_daily_price' => 35000,
@@ -59,26 +60,27 @@ class GameSeeder extends Seeder
             [
                 'platform_id'      => $switch->id,
                 'title'            => 'Super Mario Odyssey',
+                'cover_image'      => 'Super Mario Odyssey Is Right Around The Corner_ -___.jpg',
                 'condition'        => 'good',
                 'stock'            => 2,
                 'rent_daily_price' => 20000,
                 'deposit_amount'   => 180000,
                 'is_active'        => true,
             ],
-            // Xbox Series X
             [
                 'platform_id'      => $xbox->id,
                 'title'            => 'Forza Horizon 5',
+                'cover_image'      => 'Forza Horizon 5 Review.jpg',
                 'condition'        => 'like_new',
                 'stock'            => 3,
                 'rent_daily_price' => 25000,
                 'deposit_amount'   => 200000,
                 'is_active'        => true,
             ],
-            // Retro Console
             [
                 'platform_id'      => $retro->id,
                 'title'            => 'Tekken 3 (PS1 Original Disc)',
+                'cover_image'      => 'tekken3.jpg',
                 'condition'        => 'good',
                 'stock'            => 1,
                 'rent_daily_price' => 15000,

@@ -1,7 +1,7 @@
 @extends('layouts.app', ['title' => $game->title])
 
 @section('content')
-<!-- Breadcrumb Sesuai Screenshot 1 -->
+<!-- Breadcrumb -->
 <div class="text-xs text-[#8F98A0] mb-2 space-x-1.5">
     <a href="{{ route('catalog.index') }}" class="hover:text-white transition">Toko</a>
     <span>&gt;</span>
@@ -15,16 +15,19 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
     
-    <!-- Kolom Kiri: Cover Game & Spesifikasi Fisik (8 Kolom) -->
+    <!-- ========== KOLOM KIRI: Cover & Spesifikasi (8 Kolom) ========== -->
     <div class="lg:col-span-8">
         
-        <!-- Large Cover Container -->
-        <div class="h-[380px] bg-[#16212E] rounded-md flex items-center justify-center relative mb-8 border border-black/20">
-            <span class="text-xs tracking-wider uppercase font-semibold text-[#5A697A] absolute top-4 right-4">COVER GAME</span>
-            <span class="text-9xl opacity-75">🎮</span>
+        <!-- Large Cover Container dengan Gambar Asli -->
+        <div class="h-[380px] bg-[#16212E] rounded-md overflow-hidden relative mb-8 border border-black/20 shadow-xl">
+            <img 
+                src="{{ $game->coverUrl() }}" 
+                alt="{{ $game->title }}" 
+                class="w-full h-full object-cover object-center"
+            >
         </div>
 
-        <!-- Spesifikasi Rinci Sesuai Screenshot 1 -->
+        <!-- Spesifikasi Game Fisik -->
         <div class="space-y-3 text-sm">
             <div class="grid grid-cols-12">
                 <span class="col-span-3 text-[#8F98A0]">Platform</span>
@@ -65,20 +68,22 @@
 
     </div>
 
-    <!-- Kolom Kanan: SEWA GAME INI Card (Screenshot 1) -->
+    <!-- ========== KOLOM KANAN: SEWA GAME INI (4 Kolom) ========== -->
     <div class="lg:col-span-4 bg-[#223347] rounded-md p-6 border border-black/20">
         <h2 class="text-xs font-bold uppercase tracking-widest text-[#C7D5E0] mb-4">SEWA GAME INI</h2>
 
         @if($game->stock <= 0)
+            <!-- Pesan Stok Habis -->
             <div class="p-4 bg-[#171A21] rounded text-xs text-rose-400 font-semibold mb-4 text-center">
-                Mohon maaf, saat ini stok kaset game ini sedang dipinjam seluruhnya.
+                Mohon maaf, stok kaset game ini sedang habis dipinjam.
             </div>
         @else
-            <!-- Form Checkout (Akan diproses di Tahap 5) -->
+            <!-- Form Checkout (action akan dihubungkan di Tahap 5) -->
             <form action="{{ route('rentals.checkout', $game->id) }}" method="GET" id="rentForm">
-                <!-- Pilihan Durasi 3 / 7 / 14 Hari -->
+                <!-- Hidden Input Durasi (diupdate oleh JavaScript) -->
                 <input type="hidden" name="duration" id="input-duration" value="7">
                 
+                <!-- Pilihan Durasi 3 / 7 / 14 Hari -->
                 <div class="grid grid-cols-3 gap-2 mb-6">
                     <button 
                         type="button" 
@@ -106,7 +111,7 @@
                     </button>
                 </div>
 
-                <!-- Rincian Biaya Interaktif -->
+                <!-- Rincian Kalkulasi Biaya Sewa -->
                 <div class="space-y-3 text-sm pb-5 border-b border-[#30455E]">
                     <div class="flex justify-between">
                         <span class="text-[#8F98A0]">Harga sewa harian</span>
@@ -124,7 +129,7 @@
                     </div>
                 </div>
 
-                <!-- Total Bayar & Estimasi Tanggal -->
+                <!-- Total Bayar & Estimasi Tanggal Kembali -->
                 <div class="pt-5 mb-2">
                     <div class="flex justify-between items-baseline">
                         <span class="text-base font-bold text-white">Total bayar</span>
@@ -138,7 +143,7 @@
                     </p>
                 </div>
 
-                <!-- Tombol Aksi Utama: Sewa Sekarang (Hijau #3F7D1A) -->
+                <!-- Tombol Sewa Sekarang (Hijau #3F7D1A) -->
                 @auth
                     <button type="submit" class="w-full bg-[#3F7D1A] hover:bg-[#4C9620] text-white font-bold text-sm py-3 rounded mt-5 transition shadow">
                         Sewa sekarang
@@ -161,14 +166,19 @@
 
 @push('scripts')
 <script>
-    // Nilai dari basis data
+    // Data dari database (dikirim oleh PHP ke JavaScript)
     const dailyPrice = {{ (int) $game->rent_daily_price }};
     const depositAmount = {{ (int) $game->deposit_amount }};
 
+    /**
+     * Fungsi selectDuration(days)
+     * Mengubah tampilan tombol aktif, menghitung ulang subtotal sewa,
+     * grand total (sewa + deposit), dan estimasi tanggal kembali.
+     */
     function selectDuration(days) {
-        // 1. Update style tombol
-        [3, 7, 14].forEach(d => {
-            const btn = document.getElementById('btn-dur-' + d);
+        // 1. Update tampilan tombol aktif (biru muda) vs non-aktif (gelap)
+        [3, 7, 14].forEach(function(d) {
+            var btn = document.getElementById('btn-dur-' + d);
             if (d === days) {
                 btn.className = 'py-2.5 rounded bg-[#66C0F4] text-xs font-extrabold text-[#171A21] text-center transition';
             } else {
@@ -176,37 +186,43 @@
             }
         });
 
-        // 2. Simpan nilai ke form input
+        // 2. Simpan durasi terpilih ke hidden input (dikirim ke server saat checkout)
         document.getElementById('input-duration').value = days;
 
-        // 3. Kalkulasi harga sesuai aturan bisnis
-        const rentSubtotal = dailyPrice * days;
-        const grandTotal = rentSubtotal + depositAmount;
+        // 3. Hitung biaya sesuai aturan bisnis:
+        //    rent_total = harga_harian × durasi
+        //    grand_total = rent_total + deposit_jaminan
+        var rentSubtotal = dailyPrice * days;
+        var grandTotal = rentSubtotal + depositAmount;
 
-        // 4. Update teks di tampilan
+        // 4. Update teks kalkulasi di tampilan
         document.getElementById('text-dur-label').innerText = days;
         document.getElementById('text-rent-total').innerText = 'Rp ' + rentSubtotal.toLocaleString('id-ID');
         document.getElementById('text-grand-total').innerText = 'Rp ' + grandTotal.toLocaleString('id-ID');
 
-        // 5. Kalkulasi tanggal mulai & jatuh tempo
+        // 5. Hitung estimasi tanggal mulai (hari ini) dan tanggal kembali (+ durasi)
         updateDateInfo(days);
     }
 
+    /**
+     * Fungsi updateDateInfo(days)
+     * Menghitung tanggal mulai sewa (hari ini) dan tanggal jatuh tempo (hari ini + durasi).
+     */
     function updateDateInfo(days) {
-        const today = new Date();
-        const dueDate = new Date();
+        var today = new Date();
+        var dueDate = new Date();
         dueDate.setDate(today.getDate() + days);
 
-        const options = { day: 'numeric', month: 'long', year: 'numeric' };
-        const todayStr = today.toLocaleDateString('id-ID', options);
-        const dueStr = dueDate.toLocaleDateString('id-ID', options);
+        var options = { day: 'numeric', month: 'long', year: 'numeric' };
+        var todayStr = today.toLocaleDateString('id-ID', options);
+        var dueStr = dueDate.toLocaleDateString('id-ID', options);
 
         document.getElementById('text-date-info').innerText = 
-            `Jika mulai ${todayStr}, kembali pada ${dueStr}.`;
+            'Jika mulai ' + todayStr + ', kembali pada ' + dueStr + '.';
     }
 
-    // Inisialisasi awal saat halaman terbuka
-    document.addEventListener('DOMContentLoaded', function () {
+    // Jalankan kalkulasi awal saat halaman pertama kali terbuka (default: 7 hari)
+    document.addEventListener('DOMContentLoaded', function() {
         selectDuration(7);
     });
 </script>

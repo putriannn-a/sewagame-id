@@ -10,37 +10,45 @@ use Illuminate\View\View;
 class CatalogController extends Controller
 {
     /**
-     * Halaman Utama / Toko (Menampilkan Game Pilihan, Baru Masuk, & Filter)
+     * Halaman Utama / Toko
      */
     public function index(Request $request): View
     {
-        // 1. Ambil semua platform untuk tombol filter dan jelajahi platform
         $platforms = Platform::orderBy('id', 'asc')->get();
 
-        // 2. Query dasar game aktif menggunakan Eager Loading untuk mencegah N+1 Query
+        // Base query: Eager loading platform
         $query = Game::with('platform')->where('is_active', true);
 
-        // Filter Pencarian Judul (Parameterized Query aman dari SQL Injection)
+        // 1. Filter Pencarian Judul
         if ($request->filled('q')) {
             $keyword = trim($request->input('q'));
             $query->where('title', 'like', "%{$keyword}%");
         }
 
-        // Filter Berdasarkan Platform
+        // 2. Filter Platform (Mendukung alias seperti PS5, PS4, Switch)
         if ($request->filled('platform') && $request->input('platform') !== 'all') {
-            $platformParam = $request->input('platform');
-            $query->whereHas('platform', function ($q) use ($platformParam) {
-                $q->where('name', 'like', "%{$platformParam}%");
+            $platformInput = trim($request->input('platform'));
+            
+            // Mapping alias tombol ke nama resmi di database
+            $searchPlatform = match (strtoupper($platformInput)) {
+                'PS5' => 'PlayStation 5',
+                'PS4' => 'PlayStation 4',
+                'SWITCH' => 'Nintendo Switch',
+                'XBOX' => 'Xbox',
+                'RETRO' => 'Retro',
+                default => $platformInput,
+            };
+
+            $query->whereHas('platform', function ($q) use ($searchPlatform) {
+                $q->where('name', 'like', "%{$searchPlatform}%");
             });
         }
 
-        // 3. Ambil data game pilihan (featured) untuk seksi atas
-        // Ambil 6 game pertama: game ke-1 jadi kartu besar kiri, 5 game sisanya jadi list kanan
+        // Ambil hasil query
         $allGames = (clone $query)->latest()->get();
         $featuredHero = $allGames->first();
         $featuredList = $allGames->skip(1)->take(5);
 
-        // 4. Data grid "Baru Masuk"
         $recentGames = (clone $query)->latest()->paginate(8)->withQueryString();
 
         return view('catalog.index', [
@@ -54,13 +62,11 @@ class CatalogController extends Controller
     }
 
     /**
-     * Halaman Detail Game & Kalkulator Sewa (Screenshot 1)
+     * Halaman Detail Game
      */
     public function show(int $id): View
     {
-        // Eager loading relasi platform
         $game = Game::with('platform')->where('is_active', true)->findOrFail($id);
-
         $allowedDurations = config('rental.allowed_durations', [3, 7, 14]);
         $lateFeePerDay    = config('rental.late_fee_per_day', 10000);
 

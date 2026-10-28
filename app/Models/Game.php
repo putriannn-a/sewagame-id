@@ -14,6 +14,7 @@ class Game extends Model
     protected $fillable = [
         'platform_id',
         'title',
+        'cover_image',
         'condition',
         'stock',
         'rent_daily_price',
@@ -28,13 +29,30 @@ class Game extends Model
         'is_active'        => 'boolean',
     ];
 
-    // Relasi N-1: Game dimiliki oleh satu Platform
+    /**
+     * Mendapatkan URL gambar cover game.
+     * Jika cover_image kosong atau file tidak ditemukan, tampilkan placeholder.
+     */
+    public function coverUrl(): string
+    {
+        if ($this->cover_image && file_exists(public_path('images/games/' . $this->cover_image))) {
+            return asset('images/games/' . $this->cover_image);
+        }
+
+        return asset('images/games/placeholder.png');
+    }
+
+    /**
+     * Relasi N-1: Game dimiliki oleh satu Platform
+     */
     public function platform(): BelongsTo
     {
         return $this->belongsTo(Platform::class);
     }
 
-    // Relasi 1-N: Satu Game bisa memiliki banyak riwayat sewa
+    /**
+     * Relasi 1-N: Satu Game bisa memiliki banyak riwayat sewa
+     */
     public function rentals(): HasMany
     {
         return $this->hasMany(Rental::class);
