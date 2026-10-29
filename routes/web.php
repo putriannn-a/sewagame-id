@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [CatalogController::class, 'index'])->name('catalog.index');
 Route::get('/toko', [CatalogController::class, 'index'])->name('catalog.index');
 Route::get('/game/{id}', [CatalogController::class, 'show'])->name('catalog.show');
+Route::get('/sewa-konsol-unit', [CatalogController::class, 'units'])->name('units.index');
 
 /*
 |--------------------------------------------------------------------------
@@ -63,4 +64,15 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
 
     // 4. CRUD Master Platform
     Route::resource('platforms', AdminPlatformController::class)->except(['create', 'show', 'edit']);
+});
+
+Route::middleware(['auth', 'role:customer'])->group(function () {
+    Route::get('/sewa-game/{id}', [RentalController::class, 'checkout'])->name('rentals.checkout');
+    Route::post('/sewa-game', [RentalController::class, 'store'])->name('rentals.store');
+    
+    // Halaman Bayar & Konfirmasi Bayar
+    Route::get('/sewa-game/{id}/bayar', [RentalController::class, 'pay'])->name('rentals.pay');
+    Route::post('/sewa-game/{id}/bayar', [RentalController::class, 'submitPayment'])->name('rentals.submitPayment');
+
+    Route::get('/sewa-saya', [RentalController::class, 'myRentals'])->name('rentals.my');
 });

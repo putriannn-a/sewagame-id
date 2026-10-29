@@ -48,59 +48,63 @@
 </head>
 <body class="bg-[#1B2838] text-[#C7D5E0] min-h-screen flex flex-col antialiased selection:bg-[#66C0F4] selection:text-black">
 
-    <!-- Header #171A21 (Hampir Hitam Sesuai Screenshot) -->
+    <!-- Header #171A21 -->
     <header class="bg-[#171A21] border-b border-black/40 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 sm:px-6">
             
-            <!-- Top Navigation Bar -->
             <div class="flex items-center justify-between h-16">
                 <!-- Brand Logo -->
                 <div class="flex items-center space-x-2">
-                    <a href="{{ route('catalog.index') }}" class="text-xl font-extrabold tracking-wider text-white">
-                        SewaGame<span class="text-[#66C0F4]">.ID</span>
-                    </a>
+                <!-- Logo Modern Gaming Style -->
+                <a href="{{ route('catalog.index') }}" class="flex items-center space-x-2.5 group"> 
+                    <!-- Tipografi Logo -->
+                    <div class="flex flex-col">
+                        <span class="text-lg font-black tracking-wider text-white uppercase leading-none">
+                            SEWA<span class="text-[#66C0F4]">GAME.ID</span>
+                        </span>
+                        <span class="text-[9px] font-bold tracking-widest text-[#8F98A0] uppercase leading-tight">
+                            CONSOLE RENTAL
+                        </span>
+                    </div>
+                </a>
                 </div>
 
-                <!-- Menu Utama -->
+                <!-- Navigasi Menu Rapi -->
                 <nav class="flex items-center space-x-6 text-sm">
-                    <!-- Menu Sewa Kaset (Toko Utama) -->
+                    <!-- 1. Sewa Kaset -->
                     <a href="{{ route('catalog.index') }}" class="{{ request()->routeIs('catalog.*') ? 'text-white font-semibold border-b-2 border-[#66C0F4] pb-1' : 'text-[#C7D5E0] hover:text-white transition' }}">
                         Sewa Kaset
                     </a>
                     
-                    <!-- Menu Terpisah untuk Sewa Unit Mesin / Paket Mabar -->
-                    <!-- <a href="javascript:void(0)" onclick="alert('Fitur Lanjutan: Paket Sewa Mesin Konsol (PS5/Switch), Stik Tambahan & Layar Portable. Saat ini katalog fokus pada persewaan kaset game fisik original.')" class="text-[#C7D5E0] hover:text-[#66C0F4] transition flex items-center space-x-1"> -->
-                        <span>Sewa Konsol & Unit</span>
-                        <!-- <span class="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded font-bold">Coming Soon</span> -->
+                    <!-- 2. Sewa Konsol & Unit (Halaman Khusus) -->
+                    <a href="{{ route('units.index') }}" class="{{ request()->routeIs('units.*') ? 'text-white font-semibold border-b-2 border-[#66C0F4] pb-1' : 'text-[#C7D5E0] hover:text-white transition' }}">
+                        Sewa Konsol & Unit
                     </a>
 
-                    <!-- Cara Sewa Modal Alert -->
-                    <a href="javascript:void(0)" onclick="alert('Cara sewa: 1. Pilih kaset game, 2. Tentukan durasi 3/7/14 hari, 3. Bayar sewa + jaminan, 4. Ambil di toko / kurir, 5. Jaminan kembali 100% saat kaset kembali!')" class="text-[#C7D5E0] hover:text-white transition">
-                        Cara sewa
-                    </a>
-
-                    <!-- Area Autentikasi Pengguna -->
                     @auth
                         @if(Auth::user()->isAdmin())
                             <a href="{{ route('admin.dashboard') }}" class="text-[#66C0F4] font-semibold hover:underline">
                                 Dashboard Admin
                             </a>
-                        @else
+                        @endif
+
+                        <!-- Profil Pengguna -->
+                        <span class="text-xs text-white font-semibold hidden sm:inline">{{ Auth::user()->name }}</span>
+
+                        <!-- 3. Sewa Saya Ditaruh di Paling Akhir -->
+                        @if(!Auth::user()->isAdmin())
                             <a href="{{ route('rentals.my') }}" class="{{ request()->routeIs('rentals.*') ? 'text-white font-semibold border-b-2 border-[#66C0F4] pb-1' : 'text-[#C7D5E0] hover:text-white transition' }}">
                                 Sewa saya
                             </a>
                         @endif
 
-                        <!-- Profil & Tombol Logout -->
-                        <div class="flex items-center space-x-3 pl-2">
-                            <span class="text-xs text-white font-semibold hidden sm:inline">{{ Auth::user()->name }}</span>
-                            <form action="{{ route('logout') }}" method="POST" class="inline">
-                                @csrf
-                                <button type="submit" class="text-xs bg-[#2A475E] hover:bg-[#345976] text-white px-3 py-1.5 rounded transition font-semibold">
-                                    Keluar
-                                </button>
-                            </form>
-                        </div>
+                        <!-- Tombol Keluar -->
+                        <form action="{{ route('logout') }}" method="POST" class="inline">
+                            @csrf
+                            <button type="submit" class="text-xs bg-[#2A475E] hover:bg-[#345976] text-white px-3 py-1.5 rounded transition font-semibold">
+                                Keluar
+                            </button>
+                        </form>
                     @else
                         <a href="{{ route('login') }}" class="bg-[#2A475E] hover:bg-[#345976] text-white text-xs font-semibold px-4 py-2 rounded transition">
                             Masuk
@@ -109,13 +113,13 @@
                 </nav>
             </div>
 
-            <!-- Filter & Pencarian Bar (Render dari View Anak) -->
+            <!-- Filter & Pencarian Bar -->
             @yield('filter_bar')
 
         </div>
     </header>
 
-    <!-- Flash Message Notifikasi -->
+    <!-- Flash Notifications -->
     <div class="max-w-6xl mx-auto px-4 sm:px-6 mt-4 w-full">
         @if(session('success'))
             <div class="p-3.5 mb-3 rounded bg-emerald-950/80 border border-emerald-500/50 text-emerald-200 text-xs flex justify-between items-center">
@@ -139,16 +143,16 @@
         @endif
     </div>
 
-    <!-- Main Content Slot -->
+    <!-- Main Content -->
     <main class="flex-grow max-w-6xl w-full mx-auto px-4 sm:px-6 py-6">
         @yield('content')
     </main>
 
-    <!-- Footer #171A21 -->
+    <!-- Footer -->
     <footer class="bg-[#171A21] border-t border-black/40 py-6 text-xs text-[#8F98A0] mt-16">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div>
-                <span class="text-white font-bold">SewaGame<span class="text-[#66C0F4]">.ID</span></span> &bull; Rental Kaset Game Fisik Konsol Original
+                <span class="text-white font-bold">SewaGame<span class="text-[#66C0F4]">.ID</span></span> &bull; Rental Kaset Game Fisik & Unit Konsol Original
             </div>
             <div>
                 UAS Web Application Development &bull; Universitas Cakrawala &copy; {{ date('Y') }}

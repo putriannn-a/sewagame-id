@@ -76,4 +76,61 @@ class CatalogController extends Controller
             'lateFeePerDay'    => $lateFeePerDay,
         ]);
     }
+
+    /**
+     * Halaman Khusus: Sewa Konsol, Mesin Unit, Aksesoris & Layar
+     */
+    public function units(): View
+    {
+        // Daftar paket unit mesin & aksesoris rental
+        $units = [
+            [
+                'id'          => 101,
+                'title'       => 'Paket Mesin PlayStation 5 Disc Edition',
+                'category'    => 'Konsol Utama',
+                'desc'        => 'Unit mesin PS5 + 1 Stik DualSense + Kabel HDMI & Power. Siap main di TV rumah.',
+                'stock'       => 3,
+                'daily_price' => 120000,
+                'deposit'     => 800000,
+            ],
+            [
+                'id'          => 102,
+                'title'       => 'Paket Mesin Nintendo Switch OLED',
+                'category'    => 'Konsol Utama',
+                'desc'        => 'Unit tablet OLED + Docking TV + Joy-Con Grip + Charger & Kabel HDMI.',
+                'stock'       => 2,
+                'daily_price' => 75000,
+                'deposit'     => 500000,
+            ],
+            [
+                'id'          => 103,
+                'title'       => 'Stik Tambahan DualSense PS5 Wireless Controller',
+                'category'    => 'Aksesoris & Controller',
+                'desc'        => 'Controller tambahan untuk mabar hingga 4 orang (FIFA / Tekken).',
+                'stock'       => 6,
+                'daily_price' => 20000,
+                'deposit'     => 150000,
+            ],
+            [
+                'id'          => 104,
+                'title'       => 'PlayStation VR2 Headset + Sense Controller',
+                'category'    => 'Perangkat VR',
+                'desc'        => 'Headset virtual reality 4K HDR generasi terbaru untuk PS5.',
+                'stock'       => 1,
+                'daily_price' => 150000,
+                'deposit'     => 1000000,
+            ],
+            [
+                'id'          => 105,
+                'title'       => 'Playbox Portable Gaming Monitor 15.6 Inch Full HD',
+                'category'    => 'Display / Layar',
+                'desc'        => 'Layar monitor portabel praktis untuk acara gathering, camping, atau luar rumah.',
+                'stock'       => 2,
+                'daily_price' => 60000,
+                'deposit'     => 400000,
+            ],
+        ];
+
+        return view('catalog.units', compact('units'));
+    }
 }

@@ -26,9 +26,18 @@
         <div>
             <!-- Brand Logo -->
             <div class="text-lg font-extrabold text-white tracking-wider mb-8">
-                <a href="{{ route('catalog.index') }}">
-                    SewaGame<span class="text-[#66C0F4]">.ID</span>
-                </a>
+            <!-- Logo Modern Gaming Style -->
+            <a href="{{ route('catalog.index') }}" class="flex items-center space-x-2.5 group">
+                <!-- Tipografi Logo -->
+                <div class="flex flex-col">
+                    <span class="text-lg font-black tracking-wider text-white uppercase leading-none">
+                        SEWA<span class="text-[#66C0F4]">GAME</span>
+                    </span>
+                    <span class="text-[9px] font-bold tracking-widest text-[#8F98A0] uppercase leading-tight">
+                        CONSOLE RENTAL
+                    </span>
+                </div>
+            </a>
             </div>
 
             <!-- Menu Sidebar -->

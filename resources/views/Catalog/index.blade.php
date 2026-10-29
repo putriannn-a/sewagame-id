@@ -13,7 +13,7 @@
         >
     </div>
 
-    <!-- Tab Platform (1 Baris Bersih Sesuai Screenshot 2) -->
+    <!-- Tab Platform (1 Baris Bersih) -->
     <div class="flex flex-wrap items-center gap-1.5 text-xs font-semibold">
         <a 
             href="{{ route('catalog.index', array_merge(request()->except('platform'), ['platform' => 'all'])) }}" 
@@ -95,14 +95,14 @@
             </a>
         </div>
 
-        <!-- Daftar 5 Game Pilihan di Kanan -->
-        <div class="lg:col-span-4 space-y-2">
+        <!-- Daftar 5 Game Pilihan di Kanan (Tinggi Presisi Seimbang dengan Kiri) -->
+        <div class="lg:col-span-4 space-y-2 flex flex-col justify-between h-96">
             @foreach($featuredList as $index => $item)
                 <a 
                     href="{{ route('catalog.show', $item->id) }}" 
-                    class="{{ $index === 0 ? 'bg-[#2D4560] border border-[#66C0F4]/30' : 'bg-[#223347] hover:bg-[#283c54]' }} p-3 rounded flex items-center justify-between cursor-pointer transition block"
+                    class="{{ $index === 0 ? 'bg-[#2D4560] border border-[#66C0F4]/30' : 'bg-[#223347] hover:bg-[#283c54]' }} p-3 rounded flex items-center justify-between cursor-pointer transition flex-1"
                 >
-                    <div class="flex items-center space-x-3">
+                    <div class="flex items-center space-x-3 min-w-0 pr-2">
                         <!-- Thumbnail Cover Kecil -->
                         <div class="w-10 h-10 rounded bg-[#10141A] overflow-hidden flex-shrink-0">
                             <img 
@@ -111,12 +111,14 @@
                                 class="w-full h-full object-cover"
                             >
                         </div>
-                        <div>
-                            <h3 class="text-sm font-bold text-white line-clamp-1">{{ $item->title }}</h3>
+                        <div class="min-w-0">
+                            <h3 class="text-xs sm:text-sm font-bold text-white truncate">{{ $item->title }}</h3>
                             <p class="text-[11px] text-[#AAB8C6] mt-0.5">{{ $item->platform->name }}</p>
                         </div>
                     </div>
-                    <div class="bg-[#171A21] px-2.5 py-1.5 rounded text-xs font-bold text-white font-mono flex-shrink-0 ml-2">
+
+                    <!-- Tombol Harga Rata Kanan Presisi (Tanpa karakter > nyasar) -->
+                    <div class="bg-[#171A21] px-3 py-1.5 rounded text-xs font-bold text-white flex-shrink-0 text-center min-w-[85px]">
                         Rp {{ number_format($item->rent_daily_price, 0, ',', '.') }}
                     </div>
                 </a>
@@ -128,7 +130,7 @@
 @endif
 
 <!-- ============================================= -->
-<!-- SEKSI 2: BARU MASUK (Grid 4 Kolom dengan Cover) -->
+<!-- SEKSI 2: BARU MASUK (Grid 4 Kolom) -->
 <!-- ============================================= -->
 <section class="mb-10">
     <div class="flex items-center justify-between mb-3">
@@ -162,7 +164,7 @@
                         <p class="text-xs text-[#8F98A0] mt-0.5">{{ $game->platform->name }}</p>
                         
                         <div class="flex items-center justify-between mt-3 pt-2">
-                            <!-- Dot Ketersediaan: Biru = Tersedia, Abu = Dipinjam -->
+                            <!-- Dot Ketersediaan -->
                             @if($game->stock > 0)
                                 <div class="flex items-center space-x-1.5 text-xs text-[#C7D5E0]">
                                     <span class="w-2 h-2 rounded-full bg-[#66C0F4]"></span>
@@ -175,8 +177,8 @@
                                 </div>
                             @endif
 
-                            <!-- Pill Harga Per Hari -->
-                            <div class="bg-[#171A21] px-2 py-1 rounded text-xs font-bold text-white font-mono">
+                            <!-- Pill Harga Per Hari (Bersih Tanpa > Nyasar) -->
+                            <div class="bg-[#171A21] px-2.5 py-1 rounded text-xs font-bold text-white">
                                 Rp {{ number_format($game->rent_daily_price, 0, ',', '.') }} / hari
                             </div>
                         </div>

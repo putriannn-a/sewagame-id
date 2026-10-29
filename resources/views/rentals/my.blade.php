@@ -57,21 +57,28 @@
                                     <div class="text-[10px] text-[#8F98A0]">(Deposit: Rp {{ number_format($rental->deposit_amount, 0, ',', '.') }})</div>
                                 </td>
                                 <td class="px-5 py-4">
-                                    @if($rental->status === 'pending_payment')
-                                        <span class="inline-flex items-center space-x-1.5 text-amber-400 font-semibold">
-                                            <span class="w-2 h-2 rounded-full bg-amber-400"></span>
-                                            <span>Menunggu Bayar</span>
-                                        </span>
-                                    @elseif($rental->status === 'paid' || $rental->status === 'active')
-                                        <span class="inline-flex items-center space-x-1.5 text-[#66C0F4] font-semibold">
-                                            <span class="w-2 h-2 rounded-full bg-[#66C0F4]"></span>
-                                            <span>Aktif Dipinjam</span>
-                                        </span>
-                                    @elseif($rental->status === 'completed' || $rental->status === 'returned')
-                                        <span class="inline-flex items-center space-x-1.5 text-emerald-400 font-semibold">
-                                            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
-                                            <span>Selesai (Refund Rp {{ number_format($rental->deposit_refund, 0, ',', '.') }})</span>
-                                        </span>
+                                @if($rental->status === 'pending_payment')
+                                    <a href="{{ route('rentals.pay', $rental->id) }}" class="inline-flex items-center space-x-1.5 text-amber-400 font-semibold hover:underline">
+                                        <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                                        <span>Menunggu Pembayaran (Bayar Sekarang &rarr;)</span>
+                                    </a>
+                                @elseif($rental->status === 'paid')
+                                    <span class="inline-flex items-center space-x-1.5 text-[#66C0F4] font-semibold">
+                                        <span class="w-2 h-2 rounded-full bg-[#66C0F4]"></span>
+                                        <span>Menunggu Konfirmasi Admin</span>
+                                    </span>
+                                @elseif($rental->status === 'active')
+                                    <span class="inline-flex items-center space-x-1.5 text-emerald-400 font-semibold">
+                                        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                        <span>Aktif Dipinjam</span>
+                                    </span>
+                                @elseif($rental->status === 'completed' || $rental->status === 'returned')
+                                    <span class="inline-flex items-center space-x-1.5 text-[#8F98A0] font-semibold">
+                                        <span class="w-2 h-2 rounded-full bg-[#8F98A0]"></span>
+                                        <span>Selesai (Refund Rp {{ number_format($rental->deposit_refund, 0, ',', '.') }})</span>
+                                    </span>
+                                @endif
+                            </td>
                                     @endif
                                 </td>
                             </tr>
