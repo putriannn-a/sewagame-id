@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\GameController as AdminGameController;
+use App\Http\Controllers\Admin\PlatformController as AdminPlatformController;
 use App\Http\Controllers\Admin\RentalController as AdminRentalController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogController;
@@ -32,7 +35,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 
 /*
 |--------------------------------------------------------------------------
-| Rute Khusus Customer
+| Rute Khusus Customer (Terproteksi Auth & Role Customer)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:customer'])->group(function () {
@@ -43,15 +46,21 @@ Route::middleware(['auth', 'role:customer'])->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Rute Khusus Admin
+| Rute Khusus Admin (Terproteksi Auth & Role Admin)
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
-    Route::get('/dashboard', function () {
-        return view('admin.placeholder');
-    })->name('dashboard');
+    // 1. Dashboard Operasional
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Aksi Operasional Rental Admin
+    // 2. Aksi Operasional Rental
+    Route::get('/rentals', [DashboardController::class, 'index'])->name('rentals.index');
     Route::post('/rentals/{id}/confirm-payment', [AdminRentalController::class, 'confirmPayment'])->name('rentals.confirmPayment');
     Route::post('/rentals/{id}/return', [AdminRentalController::class, 'returnGame'])->name('rentals.return');
+
+    // 3. CRUD Master Game
+    Route::resource('games', AdminGameController::class);
+
+    // 4. CRUD Master Platform
+    Route::resource('platforms', AdminPlatformController::class)->except(['create', 'show', 'edit']);
 });

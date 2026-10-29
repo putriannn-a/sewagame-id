@@ -1,7 +1,6 @@
 @extends('layouts.app', ['title' => 'Toko - Rental Game Fisik'])
 
 @section('filter_bar')
-<!-- Bar Filter Pencarian dan Tab Platform -->
 <form action="{{ route('catalog.index') }}" method="GET" class="py-3 pb-4 flex flex-wrap items-center gap-3">
     <!-- Input Pencarian -->
     <div class="w-full sm:w-72">
@@ -14,7 +13,7 @@
         >
     </div>
 
-    <!-- Tab Platform (Pills) -->
+    <!-- Tab Platform (1 Baris Bersih Sesuai Screenshot 2) -->
     <div class="flex flex-wrap items-center gap-1.5 text-xs font-semibold">
         <a 
             href="{{ route('catalog.index', array_merge(request()->except('platform'), ['platform' => 'all'])) }}" 

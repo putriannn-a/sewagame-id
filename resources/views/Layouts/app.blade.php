@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $title ?? 'Toko' }} - SewaGame.ID</title>
 
-    <!-- Google Font: Figtree (Sesuai Referensi) -->
+    <!-- Google Font: Figtree -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -63,14 +63,23 @@
 
                 <!-- Menu Utama -->
                 <nav class="flex items-center space-x-6 text-sm">
+                    <!-- Menu Sewa Kaset (Toko Utama) -->
                     <a href="{{ route('catalog.index') }}" class="{{ request()->routeIs('catalog.*') ? 'text-white font-semibold border-b-2 border-[#66C0F4] pb-1' : 'text-[#C7D5E0] hover:text-white transition' }}">
-                        Toko
+                        Sewa Kaset
                     </a>
                     
-                    <a href="javascript:void(0)" onclick="alert('Cara sewa: 1. Pilih game fisik, 2. Tentukan durasi 3/7/14 hari, 3. Bayar sewa + jaminan, 4. Ambil di toko / kirim kurir, 5. Jaminan kembali 100% saat kaset kembali!')" class="text-[#C7D5E0] hover:text-white transition">
+                    <!-- Menu Terpisah untuk Sewa Unit Mesin / Paket Mabar -->
+                    <!-- <a href="javascript:void(0)" onclick="alert('Fitur Lanjutan: Paket Sewa Mesin Konsol (PS5/Switch), Stik Tambahan & Layar Portable. Saat ini katalog fokus pada persewaan kaset game fisik original.')" class="text-[#C7D5E0] hover:text-[#66C0F4] transition flex items-center space-x-1"> -->
+                        <span>Sewa Konsol & Unit</span>
+                        <!-- <span class="text-[9px] bg-amber-500/20 text-amber-300 border border-amber-500/30 px-1.5 py-0.5 rounded font-bold">Coming Soon</span> -->
+                    </a>
+
+                    <!-- Cara Sewa Modal Alert -->
+                    <a href="javascript:void(0)" onclick="alert('Cara sewa: 1. Pilih kaset game, 2. Tentukan durasi 3/7/14 hari, 3. Bayar sewa + jaminan, 4. Ambil di toko / kurir, 5. Jaminan kembali 100% saat kaset kembali!')" class="text-[#C7D5E0] hover:text-white transition">
                         Cara sewa
                     </a>
 
+                    <!-- Area Autentikasi Pengguna -->
                     @auth
                         @if(Auth::user()->isAdmin())
                             <a href="{{ route('admin.dashboard') }}" class="text-[#66C0F4] font-semibold hover:underline">
@@ -100,7 +109,7 @@
                 </nav>
             </div>
 
-            <!-- Filter & Pencarian Bar (Hanya tampil di halaman toko atau jika diaktifkan) -->
+            <!-- Filter & Pencarian Bar (Render dari View Anak) -->
             @yield('filter_bar')
 
         </div>
@@ -140,6 +149,9 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div>
                 <span class="text-white font-bold">SewaGame<span class="text-[#66C0F4]">.ID</span></span> &bull; Rental Kaset Game Fisik Konsol Original
+            </div>
+            <div>
+                UAS Web Application Development &bull; Universitas Cakrawala &copy; {{ date('Y') }}
             </div>
         </div>
     </footer>
