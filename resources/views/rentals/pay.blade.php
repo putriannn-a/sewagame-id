@@ -45,7 +45,7 @@
             <div class="bg-[#171A21] p-4 rounded border border-[#30455E] space-y-2">
                 <span class="text-xs text-[#8F98A0] block uppercase font-bold">Nomor Virtual Account BCA:</span>
                 <div class="flex items-center justify-between bg-[#10141A] p-3 rounded border border-[#30455E]">
-                    <code class="text-lg font-bold text-[#66C0F4] tracking-widest">8801 2026 8901 2234</code>
+                    <span class="text-lg font-extrabold text-[#66C0F4] tracking-wide">8801 2026 8901 2234</span>
                     <button type="button" onclick="navigator.clipboard.writeText('8801202689012234'); alert('Nomor VA BCA disalin!')" class="bg-[#2A475E] hover:bg-[#345976] text-white text-xs font-bold px-3 py-1.5 rounded transition">
                         Salin
                     </button>
@@ -58,7 +58,7 @@
             <div class="bg-[#171A21] p-4 rounded border border-[#30455E] space-y-2">
                 <span class="text-xs text-[#8F98A0] block uppercase font-bold">Nomor Merchant E-Wallet (GoPay / OVO / Dana):</span>
                 <div class="flex items-center justify-between bg-[#10141A] p-3 rounded border border-[#30455E]">
-                    <code class="text-lg font-bold text-[#66C0F4] tracking-widest">0812-9900-7821</code>
+                    <span class="text-lg font-extrabold text-[#66C0F4] tracking-wide">0838-2418-1865</span>
                     <button type="button" onclick="navigator.clipboard.writeText('081299007821'); alert('Nomor E-Wallet disalin!')" class="bg-[#2A475E] hover:bg-[#345976] text-white text-xs font-bold px-3 py-1.5 rounded transition">
                         Salin
                     </button>

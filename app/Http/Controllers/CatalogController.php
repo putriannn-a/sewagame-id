@@ -80,9 +80,14 @@ class CatalogController extends Controller
     /**
      * Halaman Khusus: Sewa Konsol, Mesin Unit, Aksesoris & Layar
      */
+       /**
+     * Halaman Khusus: Sewa Konsol, Mesin Unit, Aksesoris & Layar
+     */
+    /**
+     * Halaman Khusus: Sewa Konsol, Mesin Unit, Aksesoris & Layar
+     */
     public function units(): View
     {
-        // Daftar paket unit mesin & aksesoris rental
         $units = [
             [
                 'id'          => 101,
@@ -92,6 +97,7 @@ class CatalogController extends Controller
                 'stock'       => 3,
                 'daily_price' => 120000,
                 'deposit'     => 800000,
+                'image'       => asset('images/games/PlayStation 5.jpg'),
             ],
             [
                 'id'          => 102,
@@ -101,6 +107,7 @@ class CatalogController extends Controller
                 'stock'       => 2,
                 'daily_price' => 75000,
                 'deposit'     => 500000,
+                'image'       => asset('images/games/Nintendo Switch OLED.jpg'),
             ],
             [
                 'id'          => 103,
@@ -110,6 +117,7 @@ class CatalogController extends Controller
                 'stock'       => 6,
                 'daily_price' => 20000,
                 'deposit'     => 150000,
+                'image'       => asset('images/games/DualSense PS5.jpg'),
             ],
             [
                 'id'          => 104,
@@ -119,6 +127,7 @@ class CatalogController extends Controller
                 'stock'       => 1,
                 'daily_price' => 150000,
                 'deposit'     => 1000000,
+                'image'       => asset('images/games/Playstation 5 (PS5) PS VR.jpg'),
             ],
             [
                 'id'          => 105,
@@ -128,6 +137,7 @@ class CatalogController extends Controller
                 'stock'       => 2,
                 'daily_price' => 60000,
                 'deposit'     => 400000,
+                'image'       => asset('images/games/Monitor 15.6.jpg'),
             ],
         ];
 
