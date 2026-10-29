@@ -1,12 +1,14 @@
 <?php
 
+use App\Http\Controllers\Admin\RentalController as AdminRentalController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogController;
+use App\Http\Controllers\RentalController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Rute Publik (Katalog & Detail Game)
+| Rute Publik (Toko & Detail Game)
 |--------------------------------------------------------------------------
 */
 Route::get('/', [CatalogController::class, 'index'])->name('catalog.index');
@@ -30,27 +32,26 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middl
 
 /*
 |--------------------------------------------------------------------------
-| Rute Khusus Customer (Auth & Role: Customer)
+| Rute Khusus Customer
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:customer'])->group(function () {
-    // Placeholder untuk checkout dan sewa saya (akan dihubungkan di Tahap 5)
-    Route::get('/sewa-game/{id}', function ($id) {
-        return redirect()->route('catalog.show', $id);
-    })->name('rentals.checkout');
-
-    Route::get('/sewa-saya', function () {
-        return view('rentals.placeholder');
-    })->name('rentals.my');
+    Route::get('/sewa-game/{id}', [RentalController::class, 'checkout'])->name('rentals.checkout');
+    Route::post('/sewa-game', [RentalController::class, 'store'])->name('rentals.store');
+    Route::get('/sewa-saya', [RentalController::class, 'myRentals'])->name('rentals.my');
 });
 
 /*
 |--------------------------------------------------------------------------
-| Rute Khusus Admin (Auth & Role: Admin)
+| Rute Khusus Admin
 |--------------------------------------------------------------------------
 */
 Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     Route::get('/dashboard', function () {
         return view('admin.placeholder');
     })->name('dashboard');
+
+    // Aksi Operasional Rental Admin
+    Route::post('/rentals/{id}/confirm-payment', [AdminRentalController::class, 'confirmPayment'])->name('rentals.confirmPayment');
+    Route::post('/rentals/{id}/return', [AdminRentalController::class, 'returnGame'])->name('rentals.return');
 });
