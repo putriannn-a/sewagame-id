@@ -154,9 +154,6 @@
             <div>
                 <span class="text-white font-bold">SewaGame<span class="text-[#66C0F4]">.ID</span></span> &bull; Rental Kaset Game Fisik & Unit Konsol Original
             </div>
-            <div>
-                UAS Web Application Development &bull; Universitas Cakrawala &copy; {{ date('Y') }}
-            </div>
         </div>
     </footer>
 

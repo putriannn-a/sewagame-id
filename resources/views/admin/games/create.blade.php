@@ -42,11 +42,11 @@
                 </div>
                 <div>
                     <label class="block text-[#8F98A0] uppercase font-bold mb-1">Tarif / Hari (Rp)</label>
-                    <input type="number" name="rent_daily_price" value="{{ old('rent_daily_price', 25000) }}" required class="w-full bg-[#171A21] border border-[#30455E] rounded px-3 py-2 text-white text-xs">
+                    <input type="number" name="rent_daily_price" value="{{ old('rent_daily_price', 15000) }}" required class="w-full bg-[#171A21] border border-[#30455E] rounded px-3 py-2 text-white text-xs">
                 </div>
                 <div>
                     <label class="block text-[#8F98A0] uppercase font-bold mb-1">Deposit (Rp)</label>
-                    <input type="number" name="deposit_amount" value="{{ old('deposit_amount', 200000) }}" required class="w-full bg-[#171A21] border border-[#30455E] rounded px-3 py-2 text-white text-xs">
+                    <input type="number" name="deposit_amount" value="{{ old('deposit_amount', 100000) }}" required class="w-full bg-[#171A21] border border-[#30455E] rounded px-3 py-2 text-white text-xs">
                 </div>
             </div>
 

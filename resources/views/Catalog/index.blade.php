@@ -8,12 +8,12 @@
             type="text" 
             name="q" 
             value="{{ $searchQuery }}" 
-            placeholder="Cari game" 
+            placeholder="Cari game..." 
             class="w-full bg-[#10141A] border border-[#223347] rounded px-3 py-2 text-xs text-white placeholder-[#5A697A] focus:outline-none focus:border-[#66C0F4]"
         >
     </div>
 
-    <!-- Tab Platform (1 Baris Bersih) -->
+    <!-- Tab Platform -->
     <div class="flex flex-wrap items-center gap-1.5 text-xs font-semibold">
         <a 
             href="{{ route('catalog.index', array_merge(request()->except('platform'), ['platform' => 'all'])) }}" 
@@ -57,10 +57,10 @@
 
 @section('content')
 
-<!-- ============================================= -->
-<!-- SEKSI 1: GAME PILIHAN (Hero Besar + List Kanan) -->
-<!-- ============================================= -->
-@if($featuredHero)
+<!-- ========================================================================= -->
+<!-- SEKSI 1: GAME PILIHAN (HANYA TAMPIL JIKA TIDAK SEDANG SEARCH / FILTER)   -->
+<!-- ========================================================================= -->
+@if(!$searchQuery && $activeFilter === 'all' && $featuredHero)
 <section class="mb-10">
     <h2 class="text-xs font-bold uppercase tracking-widest text-[#728292] mb-3">GAME PILIHAN</h2>
     
@@ -69,16 +69,13 @@
         <!-- Kartu Besar Game Pilihan Utama (Kiri) -->
         <div class="lg:col-span-8 bg-[#223347] rounded-md overflow-hidden relative group h-96">
             <a href="{{ route('catalog.show', $featuredHero->id) }}">
-                <!-- Cover Gambar Besar -->
                 <img 
                     src="{{ $featuredHero->coverUrl() }}" 
                     alt="{{ $featuredHero->title }}" 
                     class="w-full h-full object-cover object-center group-hover:scale-105 transition duration-500 brightness-90"
                 >
-                <!-- Gradient Overlay Bawah -->
                 <div class="absolute inset-0 bg-gradient-to-t from-[#101721] via-[#101721]/50 to-transparent"></div>
                 
-                <!-- Info Overlay -->
                 <div class="absolute bottom-0 inset-x-0 p-6 pt-12 z-10">
                     <h1 class="text-3xl font-extrabold text-white">{{ $featuredHero->title }}</h1>
                     <p class="text-xs text-[#C7D5E0] mt-1">{{ $featuredHero->platform->name }} &bull; Sewa 3, 7, atau 14 hari</p>
@@ -95,15 +92,14 @@
             </a>
         </div>
 
-        <!-- Daftar 5 Game Pilihan di Kanan (Tinggi Presisi Seimbang dengan Kiri) -->
-        <div class="lg:col-span-4 space-y-2 flex flex-col justify-between h-96">
+        <!-- Daftar 5 Game Pilihan di Kanan -->
+        <div class="lg:col-span-4 space-y-2">
             @foreach($featuredList as $index => $item)
                 <a 
                     href="{{ route('catalog.show', $item->id) }}" 
-                    class="{{ $index === 0 ? 'bg-[#2D4560] border border-[#66C0F4]/30' : 'bg-[#223347] hover:bg-[#283c54]' }} p-3 rounded flex items-center justify-between cursor-pointer transition flex-1"
+                    class="{{ $index === 0 ? 'bg-[#2D4560] border border-[#66C0F4]/30' : 'bg-[#223347] hover:bg-[#283c54]' }} p-3 rounded flex items-center justify-between cursor-pointer transition h-[68px]"
                 >
                     <div class="flex items-center space-x-3 min-w-0 pr-2">
-                        <!-- Thumbnail Cover Kecil -->
                         <div class="w-10 h-10 rounded bg-[#10141A] overflow-hidden flex-shrink-0">
                             <img 
                                 src="{{ $item->coverUrl() }}" 
@@ -117,7 +113,6 @@
                         </div>
                     </div>
 
-                    <!-- Tombol Harga Rata Kanan Presisi (Tanpa karakter > nyasar) -->
                     <div class="bg-[#171A21] px-3 py-1.5 rounded text-xs font-bold text-white flex-shrink-0 text-center min-w-[85px]">
                         Rp {{ number_format($item->rent_daily_price, 0, ',', '.') }}
                     </div>
@@ -129,26 +124,40 @@
 </section>
 @endif
 
-<!-- ============================================= -->
-<!-- SEKSI 2: BARU MASUK (Grid 4 Kolom) -->
-<!-- ============================================= -->
+<!-- ========================================================================= -->
+<!-- SEKSI 2: HASIL PENCARIAN / BARU MASUK (GRID 4 KOLOM)                     -->
+<!-- ========================================================================= -->
 <section class="mb-10">
     <div class="flex items-center justify-between mb-3">
-        <h2 class="text-xs font-bold uppercase tracking-widest text-[#728292]">BARU MASUK</h2>
+        <h2 class="text-xs font-bold uppercase tracking-widest text-[#728292]">
+            @if($searchQuery)
+                HASIL PENCARIAN UNTUK: "<span class="text-white">{{ $searchQuery }}</span>"
+            @elseif($activeFilter !== 'all')
+                KATALOG GAME: <span class="text-white">{{ strtoupper($activeFilter) }}</span>
+            @else
+                BARU MASUK
+            @endif
+        </h2>
+
         @if($searchQuery || $activeFilter !== 'all')
-            <a href="{{ route('catalog.index') }}" class="text-xs text-[#66C0F4] hover:underline">Reset Filter</a>
+            <a href="{{ route('catalog.index') }}" class="text-xs text-[#66C0F4] hover:underline">
+                &larr; Reset Filter / Tampilkan Semua
+            </a>
         @endif
     </div>
     
     @if($recentGames->isEmpty())
-        <div class="bg-[#223347] p-8 rounded text-center text-xs text-[#8F98A0]">
-            Tidak ada game fisik yang cocok dengan pencarian atau filter platform Anda.
+        <div class="bg-[#223347] p-12 rounded text-center">
+            <p class="text-sm text-white font-bold">Game Tidak Ditemukan</p>
+            <p class="text-xs text-[#8F98A0] mt-1">Tidak ada kaset game fisik yang cocok dengan kata kunci "{{ $searchQuery }}".</p>
+            <a href="{{ route('catalog.index') }}" class="inline-block mt-4 bg-[#2A475E] text-white text-xs px-4 py-2 rounded">
+                Kembali ke Beranda Toko
+            </a>
         </div>
     @else
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             @foreach($recentGames as $game)
                 <a href="{{ route('catalog.show', $game->id) }}" class="bg-[#223347] rounded-md overflow-hidden flex flex-col justify-between cursor-pointer group hover:ring-1 hover:ring-[#66C0F4]/50 transition">
-                    <!-- Cover Gambar Game -->
                     <div class="h-44 bg-[#182535] relative overflow-hidden">
                         <img 
                             src="{{ $game->coverUrl() }}" 
@@ -158,13 +167,11 @@
                         <div class="absolute inset-0 bg-gradient-to-t from-[#223347] via-transparent to-transparent opacity-60"></div>
                     </div>
 
-                    <!-- Info Game -->
                     <div class="p-3.5">
                         <h3 class="text-sm font-bold text-white line-clamp-1 group-hover:text-[#66C0F4] transition">{{ $game->title }}</h3>
                         <p class="text-xs text-[#8F98A0] mt-0.5">{{ $game->platform->name }}</p>
                         
                         <div class="flex items-center justify-between mt-3 pt-2">
-                            <!-- Dot Ketersediaan -->
                             @if($game->stock > 0)
                                 <div class="flex items-center space-x-1.5 text-xs text-[#C7D5E0]">
                                     <span class="w-2 h-2 rounded-full bg-[#66C0F4]"></span>
@@ -177,7 +184,6 @@
                                 </div>
                             @endif
 
-                            <!-- Pill Harga Per Hari (Bersih Tanpa > Nyasar) -->
                             <div class="bg-[#171A21] px-2.5 py-1 rounded text-xs font-bold text-white">
                                 Rp {{ number_format($game->rent_daily_price, 0, ',', '.') }} / hari
                             </div>
@@ -187,7 +193,6 @@
             @endforeach
         </div>
 
-        <!-- Pagination Links -->
         <div class="mt-6">
             {{ $recentGames->links() }}
         </div>
@@ -195,8 +200,9 @@
 </section>
 
 <!-- ============================================= -->
-<!-- SEKSI 3: JELAJAHI PLATFORM -->
+<!-- SEKSI 3: JELAJAHI PLATFORM                    -->
 <!-- ============================================= -->
+@if(!$searchQuery)
 <section class="mb-12">
     <h2 class="text-xs font-bold uppercase tracking-widest text-[#728292] mb-3">JELAJAHI PLATFORM</h2>
     <div class="grid grid-cols-2 sm:grid-cols-5 gap-3">
@@ -210,4 +216,6 @@
         @endforeach
     </div>
 </section>
+@endif
+
 @endsection

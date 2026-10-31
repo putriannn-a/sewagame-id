@@ -15,42 +15,38 @@ class CatalogController extends Controller
     public function index(Request $request): View
     {
         $platforms = Platform::orderBy('id', 'asc')->get();
-
-        // Base query: Eager loading platform
+        // 1. GAME PILIHAN: Selalu ambil 6 game terpopuler/terbaru (tidak terpengaruh filter)
+        $featuredGames = Game::with('platform')
+            ->where('is_active', true)
+            ->latest()
+            ->take(6)
+            ->get();
+        $featuredHero = $featuredGames->first();
+        $featuredList = $featuredGames->skip(1);
+        // 2. BARU MASUK: Bagian ini yang dipengaruhi oleh filter & pencarian
         $query = Game::with('platform')->where('is_active', true);
-
-        // 1. Filter Pencarian Judul
+        // Filter Pencarian Judul
         if ($request->filled('q')) {
             $keyword = trim($request->input('q'));
             $query->where('title', 'like', "%{$keyword}%");
         }
-
-        // 2. Filter Platform (Mendukung alias seperti PS5, PS4, Switch)
+        // Filter Platform
         if ($request->filled('platform') && $request->input('platform') !== 'all') {
             $platformInput = trim($request->input('platform'));
             
-            // Mapping alias tombol ke nama resmi di database
             $searchPlatform = match (strtoupper($platformInput)) {
-                'PS5' => 'PlayStation 5',
-                'PS4' => 'PlayStation 4',
+                'PS5'    => 'PlayStation 5',
+                'PS4'    => 'PlayStation 4',
                 'SWITCH' => 'Nintendo Switch',
-                'XBOX' => 'Xbox',
-                'RETRO' => 'Retro',
-                default => $platformInput,
+                'XBOX'   => 'Xbox',
+                'RETRO'  => 'Retro',
+                default  => $platformInput,
             };
-
             $query->whereHas('platform', function ($q) use ($searchPlatform) {
                 $q->where('name', 'like', "%{$searchPlatform}%");
             });
         }
-
-        // Ambil hasil query
-        $allGames = (clone $query)->latest()->get();
-        $featuredHero = $allGames->first();
-        $featuredList = $allGames->skip(1)->take(5);
-
-        $recentGames = (clone $query)->latest()->paginate(8)->withQueryString();
-
+        $recentGames = $query->latest()->paginate(8)->withQueryString();
         return view('catalog.index', [
             'platforms'    => $platforms,
             'featuredHero' => $featuredHero,
@@ -77,15 +73,6 @@ class CatalogController extends Controller
         ]);
     }
 
-    /**
-     * Halaman Khusus: Sewa Konsol, Mesin Unit, Aksesoris & Layar
-     */
-       /**
-     * Halaman Khusus: Sewa Konsol, Mesin Unit, Aksesoris & Layar
-     */
-    /**
-     * Halaman Khusus: Sewa Konsol, Mesin Unit, Aksesoris & Layar
-     */
     public function units(): View
     {
         $units = [
