@@ -95,8 +95,8 @@
             <div>
                 <span class="text-[#8F98A0] block text-[11px]">Nomor WhatsApp Admin SewaGame:</span>
                 <div class="flex items-center justify-between mt-1">
-                    <span class="text-base font-extrabold text-[#66C0F4] tracking-wide" id="adminPhone">0838-2418-1865</span>
-                    <button type="button" onclick="navigator.clipboard.writeText('083824181865'); alert('Nomor WhatsApp admin disalin!')" class="bg-[#2A475E] hover:bg-[#345976] text-white px-2.5 py-1 rounded text-[11px] font-semibold transition">
+                    <span class="text-base font-extrabold text-[#66C0F4] tracking-wide" id="adminPhone">0899-9999-9999</span>
+                    <button type="button" onclick="navigator.clipboard.writeText('089999999999'); alert('Nomor WhatsApp admin disalin!')" class="bg-[#2A475E] hover:bg-[#345976] text-white px-2.5 py-1 rounded text-[11px] font-semibold transition">
                         Salin No. WA
                     </button>
                 </div>
@@ -132,7 +132,7 @@
     function openContactModal(title) {
         document.getElementById('modalUnitTitle').innerText = title;
         var encoded = encodeURIComponent("Halo Admin SewaGame.ID, saya ingin sewa/booking unit: " + title);
-        document.getElementById('whatsappLink').href = "https://wa.me/6283824181865?text=" + encoded;
+        document.getElementById('whatsappLink').href = "https://wa.me/6289999999999?text=" + encoded;
         document.getElementById('contactModal').classList.remove('hidden');
     }
 
