@@ -9,7 +9,7 @@
             <p class="text-xs text-[#8F98A0] mt-1">Sewa game fisik PS5, Switch, PS4, Xbox & Retro</p>
         </div>
 
-        <!-- Akun Demo untuk Penguji UAS -->
+        <!-- Akun Demo untuk Penguji UAS
         <div class="mb-6 p-3 bg-[#171A21] border border-[#30455E] rounded text-xs">
             <p class="font-bold text-[#66C0F4] mb-1">Akun Demo Pengujian UAS:</p>
             <div class="grid grid-cols-2 gap-2 text-[11px]">
@@ -24,7 +24,7 @@
                     <span class="text-slate-400">pass: customer123</span>
                 </div>
             </div>
-        </div>
+        </div> -->
 
         <form action="{{ route('login.post') }}" method="POST" class="space-y-4">
             <!-- Proteksi CSRF Server-Side -->
